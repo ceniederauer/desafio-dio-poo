@@ -9,11 +9,24 @@ public class Dev {
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
 
-    public void inscreverBootcamp(Bootcamp bootcamp) { }
+    public void inscreverBootcamp(Bootcamp bootcamp) {
+        this.conteudosInscritos.addAll(bootcamp.getConteudos());
+        bootcamp.getDevsInscritos().add(this);
+    }
 
-    public void progredir() {}
+    public void progredir() {
+        this.conteudosInscritos.stream().findFirst().ifPresent(conteudo -> {
+            this.conteudosConcluidos.add(conteudo);
+            this.conteudosInscritos.remove(conteudo);
+        });
+    }
 
-    public void calcularXpTotal() {}
+    public double calcularXpTotal() {
+        return this.conteudosConcluidos
+                .stream()
+                .mapToDouble(Conteudo::CalcularXP)
+                .sum();
+    }
 
     @Override
     public boolean equals(Object o) {
